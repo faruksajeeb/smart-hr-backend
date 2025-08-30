@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -10,12 +11,18 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/profile', [AuthController::class, 'profile'])->middleware('auth:sanctum');
-#update profile
-Route::put('/profile', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
-#change password
-Route::put('/change-password', [AuthController::class, 'changePassword'])->middleware('auth:sanctum');
-#logout
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-#delete account
-Route::delete('/delete-account', [AuthController::class, 'deleteAccount'])->middleware('auth:sanctum');
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [AuthController::class, 'profile']);
+    #update profile
+    Route::put('/profile', [AuthController::class, 'updateProfile']);
+    #change password
+    Route::put('/change-password', [AuthController::class, 'changePassword']);
+    #logout
+    Route::post('/logout', [AuthController::class, 'logout']);
+    #delete account
+    Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
+    #user resource routes
+    Route::apiResource('users', UserController::class);
+});
