@@ -15,10 +15,10 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $query = User::query()
-            ->when($request->search, fn($x)=>$x->where(function($w) use ($request){
-                $w->where('name','like',"%{$request->search}%")
-                  ->orWhere('email','like',"%{$request->search}%");
+        $query = User::with(['roles', 'permissions'])
+            ->when($request->search, fn($x) => $x->where(function ($w) use ($request) {
+                $w->where('name', 'like', "%{$request->search}%")
+                    ->orWhere('email', 'like', "%{$request->search}%");
             }))
             ->orderBy($request->sort ?? 'id', $request->dir ?? 'desc');
 
@@ -29,7 +29,16 @@ class UserController extends Controller
     {
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
-        return new UserResource(User::create($data));
+
+        $user = User::create($data);
+        if ($request->selectedRoles) {
+            $user->assignRole($request->selectedRoles);
+        }
+
+        if (!empty($request->permissions)) {
+            $user->syncPermissions($request->permissions);
+        }
+        return new UserResource($user);
     }
 
     public function show(User $user)
@@ -46,12 +55,23 @@ class UserController extends Controller
             unset($data['password']);
         }
         $user->update($data);
+        if ($request->selectedRoles) {
+            $user->assignRole($request->selectedRoles);
+        }
+
+        if (!empty($request->permissions)) {
+            $user->syncPermissions($request->permissions);
+        }
+        
         return new UserResource($user);
     }
 
     public function destroy(User $user)
     {
+        // Detach all roles related to the user
+        $user->roles()->detach();
+
         $user->delete(); // use SoftDeletes if you prefer
-        return response()->json(['message'=>'Deleted']);
+        return response()->json(['message' => 'Deleted']);
     }
 }

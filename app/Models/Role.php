@@ -13,4 +13,5 @@ class Role extends SpatieRole
         'guard_name',
         'is_active',
     ];
+
 }
