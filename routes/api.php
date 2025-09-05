@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PermissionController;
+use App\Http\Controllers\Api\MasterDataController;
+use App\Http\Controllers\Api\Settings\BusinessSettingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +42,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('permissions', PermissionController::class);
     Route::apiResource('roles', RoleController::class);
+
     Route::get('/role-permissions', [RoleController::class, 'rolePermissions']);
     Route::get('/active-roles', [RoleController::class, 'activeRoles']);
+
+    Route::apiResource('master-data', MasterDataController::class);
+    Route::get('master-data-types', [MasterDataController::class, 'masterDataTypes']); 
+    Route::get('active-master-data', [MasterDataController::class, 'activeMasterData']); 
+    Route::patch('master-data/{master_datum}/toggle-status', [MasterDataController::class, 'toggleStatus']);
+    Route::post('/master-data/import', [MasterDataController::class, 'import']);
+
+    Route::apiResource(' business-settings', BusinessSettingController::class);
 });
+

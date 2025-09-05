@@ -54,7 +54,7 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     { 
-        sleep(3);
+        
         return new PermissionResource($permission);
     }
 

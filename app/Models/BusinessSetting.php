@@ -1,0 +1,95 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class BusinessSetting extends Model
+{
+    protected $fillable = [
+        'site_title',
+        'theme',
+        'home_style',
+        'vat_for_food',
+        'cookie_title',
+        'cookie_button_name',
+        'cookie_button_url',
+        'cookie_status',
+        'cookie_short_text',
+        'cookie_image',
+        'cookie_driver',
+        'delivery_charge',
+        'primary_color',
+        'secondary_color',
+        'time_zone',
+        'base_currency',
+        'currency_symbol',
+        'admin_prefix',
+        'is_currency_position',
+        'has_space_between_currency_and_amount',
+        'is_force_ssl',
+        'is_maintenance_mode',
+        'paginate',
+        'paginate_food',
+        'strong_password',
+        'registration',
+        'online_order',
+        'delivery_panel',
+        'guest_order',
+        'fraction_number',
+        'sender_email',
+        'sender_email_name',
+        'email_description',
+        'push_notification',
+        'in_app_notification',
+        'email_notification',
+        'email_verification',
+        'sms_notification',
+        'sms_verification',
+        'tawk_id',
+        'tawk_status',
+        'fb_messenger_status',
+        'fb_app_id',
+        'fb_page_id',
+        'manual_recaptcha',
+        'google_recaptcha',
+        'recaptcha_admin_login',
+        'reCaptcha_status_login',
+        'reCaptcha_status_registration',
+        'google_admin_login_recaptcha_status',
+        'google_user_login_recaptcha_status',
+        'google_user_registration_recaptcha_status',
+        'measurement_id',
+        'analytic_status',
+        'error_log',
+        'is_active_cron_notification',
+        'logo',
+        'logo_driver',
+        'favicon',
+        'favicon_driver',
+        'admin_logo',
+        'admin_logo_driver',
+        'admin_dark_mode_logo',
+        'admin_dark_mode_logo_driver',
+        'website_wallet_logo',
+        'cash_on_delivery_logo',
+        'website_wallet_logo_driver',
+        'cash_on_delivery_logo_driver',
+        'currency_layer_access_key',
+        'currency_layer_auto_update_at',
+        'currency_layer_auto_update',
+        'coin_market_cap_app_key',
+        'coin_market_cap_auto_update_at',
+        'coin_market_cap_auto_update',
+        'automatic_payout_permission',
+        'instruction',
+        'date_time_format',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'business_settings';
+}
