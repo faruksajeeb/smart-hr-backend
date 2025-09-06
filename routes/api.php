@@ -45,12 +45,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/role-permissions', [RoleController::class, 'rolePermissions']);
     Route::get('/active-roles', [RoleController::class, 'activeRoles']);
+    
+    Route::post('/master-data/import', [MasterDataController::class, 'import']);
+    Route::get('/master-data/export', [MasterDataController::class, 'export'])->name('master-data.export');
 
     Route::apiResource('master-data', MasterDataController::class);
     Route::get('master-data-types', [MasterDataController::class, 'masterDataTypes']); 
     Route::get('active-master-data', [MasterDataController::class, 'activeMasterData']); 
     Route::patch('master-data/{master_datum}/toggle-status', [MasterDataController::class, 'toggleStatus']);
-    Route::post('/master-data/import', [MasterDataController::class, 'import']);
+
 
     Route::apiResource(' business-settings', BusinessSettingController::class);
 });

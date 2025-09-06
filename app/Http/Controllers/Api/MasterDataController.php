@@ -14,7 +14,8 @@ use App\Http\Requests\UpdateMasterDataRequest;
 use App\Imports\MasterDataImport;
 use Maatwebsite\Excel\Facades\Excel;
 
-// use App\Exports\MasterDataExport;
+
+use App\Exports\MasterDataExport;
 
 class MasterDataController extends Controller
 {
@@ -102,7 +103,7 @@ class MasterDataController extends Controller
 
             if ($import->getRowCount() === 0) {
                 return response()->json([
-                    'message' => 'The file must contain at least one record.',
+                    'message' => 'Empty file! No record found.',
                 ], 422);
             }
 
@@ -114,19 +115,21 @@ class MasterDataController extends Controller
                 'message' => 'Validation failed',
                 'errors' => $e->failures(), // gives row + column + error message
             ], 422);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Import failed due to server error. <br/>'.$e->getMessage(),
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
 
-    public function export(Request $request)
-    {
-        if (!auth()->user()->can('master_data.export')) {
-            abort(403, 'Unauthorized');
-        }
-        $filters = $request->only(['type', 'status', 'parent', 'search']);
 
-        // return Excel::download(new MasterDataExport($filters), 'master_data.xlsx');
-    }
+public function export()
+{
+    return Excel::download(new MasterDataExport, 'master_data.xlsx');
+}
+
 
     public function create()
     {
