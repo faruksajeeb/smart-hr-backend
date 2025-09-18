@@ -34,6 +34,7 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
+        sleep(1);
         $validator = validator($request->all(), [
             'email' => 'required|string|email',
             'password' => 'required|string',

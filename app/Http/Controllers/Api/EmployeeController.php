@@ -3,21 +3,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\MasterDataResource;
-use App\Enums\MasterDataType;
-use App\Repositories\MasterDataRepositoryInterface;
+use App\Http\Resources\EmployeeResource;
+use App\Enums\EmployeeType;
+use App\Repositories\EmployeeRepositoryInterface;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreMasterDataRequest;
-use App\Http\Requests\UpdateMasterDataRequest;
-use App\Imports\MasterDataImport;
-use App\Exports\MasterDataExport;
+use App\Http\Requests\StoreEmployeeRequest;
+use App\Http\Requests\UpdateEmployeeRequest;
+use App\Imports\EmployeeImport;
+use App\Exports\EmployeeExport;
 use Maatwebsite\Excel\Facades\Excel;
 
-class MasterDataController extends Controller
+class EmployeeController extends Controller
 {
     protected $repository;
 
-    public function __construct(MasterDataRepositoryInterface $repository)
+    public function __construct(EmployeeRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
@@ -28,19 +28,19 @@ class MasterDataController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        $masterData = $this->repository->getAll(
+        $Employee = $this->repository->getAll(
             $request->only('search', 'type', 'parent', 'status', 'sort', 'dir'),
             $request->get('per_page', 10)
         );
 
-        return MasterDataResource::collection($masterData)->additional([
-            'types' => MasterDataType::values(),
+        return EmployeeResource::collection($Employee)->additional([
+            'types' => EmployeeType::values(),
             'parents' => $this->repository->getActive(),
             'filters' => $request->only('search', 'type', 'parent', 'status', 'sort', 'dir', 'per_page'),
         ]);
     }
 
-    public function activeMasterData()
+    public function activeEmployee()
     {
         return response()->json([
             'success' => true,
@@ -48,13 +48,13 @@ class MasterDataController extends Controller
         ]);
     }
 
-    public function masterDataTypes()
+    public function EmployeeTypes()
     {
 
-        $masterDataTypes = MasterDataType::values();
+        $EmployeeTypes = EmployeeType::values();
         return response()->json([
             'success' => true,
-            'data' => $masterDataTypes
+            'data' => $EmployeeTypes
         ]);
     }
 
@@ -66,7 +66,7 @@ class MasterDataController extends Controller
 
         try {
 
-            $import = new MasterDataImport;
+            $import = new EmployeeImport;
             Excel::import($import, $request->file('file'));
 
             if ($import->getRowCount() === 0) {
@@ -93,31 +93,31 @@ class MasterDataController extends Controller
 
     public function show($id)
     {
-        $masterData = $this->repository->findById($id);
+        $Employee = $this->repository->findById($id);
 
-        if (!$masterData) {
+        if (!$Employee) {
             return response()->json(['message' => 'Not Found'], 404);
         }
 
-        return new MasterDataResource($masterData);
+        return new EmployeeResource($Employee);
     }
 
     public function export()
     {
-        return Excel::download(new MasterDataExport, 'master_data.xlsx');
+        return Excel::download(new EmployeeExport, 'master_data.xlsx');
     }
 
-    public function store(StoreMasterDataRequest $request)
+    public function store(StoreEmployeeRequest $request)
     {
-        $masterData = $this->repository->create($request->validated());
-        return new MasterDataResource($masterData);
+        $Employee = $this->repository->create($request->validated());
+        return new EmployeeResource($Employee);
     }
 
-    public function update(UpdateMasterDataRequest $request, $id)
+    public function update(UpdateEmployeeRequest $request, $id)
     {
-        $masterData = $this->repository->findById($id);
-        $updated = $this->repository->update($masterData, $request->validated());
-        return new MasterDataResource($updated);
+        $Employee = $this->repository->findById($id);
+        $updated = $this->repository->update($Employee, $request->validated());
+        return new EmployeeResource($updated);
     }
 
     public function destroy(string $id)
@@ -127,15 +127,15 @@ class MasterDataController extends Controller
     }
     public function toggleStatus($id)
     {
-        $masterData = $this->repository->findById($id);
+        $Employee = $this->repository->findById($id);
 
-        if (!$masterData) {
+        if (!$Employee) {
             return response()->json(['message' => 'Not Found'], 404);
         }
 
-        $updated = $this->repository->toggleStatus($masterData);
+        $updated = $this->repository->toggleStatus($Employee);
 
-        return new MasterDataResource($updated);
+        return new EmployeeResource($updated);
     }
 
 

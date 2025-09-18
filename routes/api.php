@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\MasterDataController;
+use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\Settings\BusinessSettingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -45,14 +46,20 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/role-permissions', [RoleController::class, 'rolePermissions']);
     Route::get('/active-roles', [RoleController::class, 'activeRoles']);
-    
-    Route::post('/master-data/import', [MasterDataController::class, 'import']);
-    Route::get('/master-data/export', [MasterDataController::class, 'export'])->name('master-data.export');
 
     Route::apiResource('master-data', MasterDataController::class);
+    Route::post('/master-data/import', [MasterDataController::class, 'import']);
+    Route::get('/master-data/export', [MasterDataController::class, 'export'])->name('master-data.export');
     Route::get('master-data-types', [MasterDataController::class, 'masterDataTypes']); 
     Route::get('active-master-data', [MasterDataController::class, 'activeMasterData']); 
     Route::patch('master-data/{master_datum}/toggle-status', [MasterDataController::class, 'toggleStatus']);
+
+    Route::apiResource('employees', EmployeeController::class);
+    Route::post('/employees/import', [EmployeeController::class, 'import']);
+    Route::get('/employees/export', [EmployeeController::class, 'export'])->name('employees.export');
+    Route::get('employees-types', [EmployeeController::class, 'masterDataTypes']); 
+    Route::get('active-employees', [EmployeeController::class, 'activeEmployees']); 
+    Route::patch('employees/{master_datum}/toggle-status', [MasterDataController::class, 'toggleStatus']);
 
 
     Route::apiResource(' business-settings', BusinessSettingController::class);
