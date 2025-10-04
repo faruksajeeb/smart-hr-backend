@@ -29,6 +29,9 @@ return new class extends Migration
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
 
             // foreign keys
+            $table->unsignedBigInteger('company_id')->nullable()->index();
+            $table->unsignedBigInteger('branch_id')->nullable()->index();
+            $table->unsignedBigInteger('division_id')->nullable()->index();
             $table->unsignedBigInteger('department_id')->nullable()->index();
             $table->unsignedBigInteger('designation_id')->nullable()->index();
 
